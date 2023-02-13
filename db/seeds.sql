@@ -24,16 +24,17 @@ VALUES ("Simon", "Mitchell", 3, NULL),
        ("Danica", "O'Neil", 6, NULL),
        ("Alison", "Riley", 8, NULL),
        ("Chris", "Bauer", 9, NULL),
-       ("Sophia", "Sheridan", 10, NULL),
-       ("Matt", "Cristiano", 9, NULL);
+       ("Sophia", "Sheridan", 10, NULL);
+
 
 SELECT * FROM employee;
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Will", "Johnson", 1, 3),
-     ("Kat", "Walsh", 2, 3),
-       ("Christina", "Nash", 5, 4),
-       ("Peter", "Gibbs", 7, 6),
-       ("Bonnie", "Mullins", 7, 6),
-      ("Tyler", "Taylor", 5, 4),
-     ("Panda", "Greenberg", 1, 3);
+VALUES ("Will", "Johnson", 1, 1),
+       ("Kat", "Walsh", 2, 1),
+       ("Christina", "Nash", 5, 2),
+       ("Peter", "Gibbs", 7, 3),
+       ("Bonnie", "Mullins", 7, 3),
+       ("Tyler", "Taylor", 5, 2),
+       ("Panda", "Greenberg", 1, 1),
+       ("Matt", "Cristiano", 9, 5);

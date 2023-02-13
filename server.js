@@ -25,22 +25,29 @@ const employeePrompt = () => {
             name: "userChoice",
             message: "What would you like to do?",
             choices: [
+                "View All Departments",
+                "View All Roles",
                 "View All Employees",
-                "View Employees by Department",
+                "Add Department",
                 "Add Role",
                 "Add Employee",
                 "Update Employee",
-                "Remove Employee",
                 "Exit"]
         }
     ])
         .then((response) => {
             switch (response.userChoice) {
-                case "View All Employees":
-                    viewAllEmployees();
+                case "View All Departments":
+                    viewAlldept();
                     break;
-                case "View Employees by Department":
-                    employeeByDep();
+                case "View All Roles":
+                    viewAllroles();
+                    break;
+                case "View All Employees":
+                    viewAllEmp();
+                    break;
+                case "Add Department":
+                    addDept();
                     break;
                 case "Add Role":
                     addRole();
@@ -49,10 +56,7 @@ const employeePrompt = () => {
                     addEmployee();
                     break;
                 case "Update Employee":
-                    updateEmployee();
-                    break;
-                case "Remove Employee":
-                    removeEmployee();
+                    updateEmpRole();
                     break;
                 case "Exit":
                     db.end();
@@ -64,9 +68,36 @@ const employeePrompt = () => {
         })
 };
 
-const viewAllEmployees = () => {
-    const sql = `SELECT employee.first_name, employee.last_name, role.title, department.department_name, role.salary
-    FROM employee LEFT JOIN role ON employee.role_id = role.id 
+const viewAlldept = () => {
+    const sql = `SELECT * FROM department`;
+
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.log(`\n`);
+        console.log('\x1b[33m Viewing All Departments: \x1b[0m');
+        console.log(`\n`);
+        console.table(rows);
+        employeePrompt();
+    })
+};
+
+const viewAllroles = () => {
+    const sql = `SELECT role.title, role.id, department_name, role.salary FROM role
+    LEFT JOIN department ON role.department_id = department.id`;
+
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.log(`\n`);
+        console.log('\x1b[33m Viewing All Roles: \x1b[0m');
+        console.log(`\n`);
+        console.table(rows);
+        employeePrompt();
+    })
+};
+
+const viewAllEmp = () => {
+    const sql = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name, role.salary, employee.manager_id FROM employee 
+    LEFT JOIN role ON employee.role_id = role.id
     LEFT JOIN department ON role.department_id = department.id`;
 
     db.query(sql, (err, rows) => {
@@ -79,20 +110,6 @@ const viewAllEmployees = () => {
     })
 };
 
-const employeeByDep = () => {
-    const sql = `SELECT department.department_name, employee.first_name, employee.last_name, role.title, role.salary 
-    FROM employee LEFT JOIN role ON employee.role_id = role.id 
-    LEFT JOIN department ON role.department_id = department.id;`;
-
-    db.query(sql, (err, rows) => {
-        if (err) throw err;
-        console.log(`\n`);
-        console.log('\x1b[33m Viewing Employees by Department: \x1b[0m');
-        console.log(`\n`);
-        console.table(rows);
-        employeePrompt();
-    })
-};
 
 const addRole = () => {
     const sql = `SELECT * FROM department`;
@@ -122,7 +139,7 @@ const addRole = () => {
                 message: "What is the role department?",
                 choices: rows,
             },
-            
+
         ])
         console.log(`\n`);
         console.log('\x1b[33m New Role Has Been Added. \x1b[0m');
@@ -132,7 +149,7 @@ const addRole = () => {
     })
 };
 
-const addEmployee= () => {
+const addEmployee = () => {
     const sql = `SELECT * FROM department`;
 
     db.query(sql, async (err, rows) => {
@@ -175,7 +192,7 @@ const addEmployee= () => {
                 name: "employeeManager",
                 message: "Who is the employees manager?",
             },
-            
+
         ])
         console.log(`\n`);
         console.log('\x1b[33m New employee Has Been Added. \x1b[0m');
@@ -185,19 +202,7 @@ const addEmployee= () => {
     })
 };
 
-// const updateEmployee = () => {
-//     const sql = ``;
-
-//     db.query(sql, (err, rows) => {
-//         if (err) throw err;
-//         console.log('Data received from DB:');
-//         console.table(rows);
-//         employeePrompt();
-//     })
-
-// };
-
-// const removeEmployee = () => {
+// const updateEmpRole = () => {
 //     const sql = ``;
 
 //     db.query(sql, (err, rows) => {
