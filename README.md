@@ -42,7 +42,7 @@
   ## Useage 
   This application will be invoked by using the following command: ``node index.js`` or ``npm start``. Answer the prompt questions to manage the company's employee database.
   
-  Watch video of how to use the Employee Tracker: [here]().
+  Watch video of how to use the Employee Tracker: [here](https://drive.google.com/file/d/1khckWcvqRg5gBuTrIQazcPVeRpyyAWMn/view?usp=sharing).
 
 
 ![Mock of Employee Tracker Database](./assets/command-line-example.png)
