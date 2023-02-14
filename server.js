@@ -10,7 +10,7 @@ const db = mysql.createConnection({
     database: 'employee_tracker_db'
 });
 
-db.connect(function (err) {
+db.connect((err) => {
     if (err) throw err;
     console.log(`\n`);
     console.log('\x1b[33m Connected to the Employee Database! \x1b[0m');
@@ -31,7 +31,6 @@ const employeePrompt = () => {
                 "Add Department",
                 "Add Role",
                 "Add Employee",
-                "Update Employee",
                 "Exit"]
         }
     ])
@@ -54,9 +53,6 @@ const employeePrompt = () => {
                     break;
                 case "Add Employee":
                     addEmployee();
-                    break;
-                case "Update Employee":
-                    updateEmpRole();
                     break;
                 case "Exit":
                     db.end();
@@ -110,106 +106,171 @@ const viewAllEmp = () => {
     })
 };
 
+const addDept = () => {
+    const sql = `SELECT * FROM department`;
+
+    db.query(sql, async (err, res) => {
+        if (err) throw err;
+        res = res.map(({ id, department }) => ({
+
+            value: id,
+            name: department,
+
+        }));
+        await inquirer.prompt([
+            {
+                type: "input",
+                name: "id",
+                message: "What is the department id?",
+            },
+            {
+                type: "input",
+                name: "deptName",
+                message: "What is the department name?",
+            },
+        ])
+
+            .then((res) => {
+                const sql = `INSERT INTO department SET ?`;
+                db.query(sql, {
+                    id: res.id,
+                    title: res.title,
+                    salary: res.salary,
+                    department_id: res.department_id,
+                })
+
+                console.log(`\n`);
+                console.log('\x1b[33m New department Has Been Added. \x1b[0m');
+                console.log(`\n`);
+                console.table(res);
+                employeePrompt();
+            });
+
+    })
+};
 
 const addRole = () => {
     const sql = `SELECT * FROM department`;
 
-    db.query(sql, async (err, rows) => {
+    db.query(sql, async (err, res) => {
         if (err) throw err;
-        rows = rows.map(row => {
-            return {
-                key: row.id,
-                value: row.department_name,
-            }
-        });
+        res = res.map(({ id, title, salary, department_id }) => ({
+
+            value: id,
+            title: title,
+            salary: salary,
+            department: department_id,
+
+        }));
         await inquirer.prompt([
             {
                 type: "input",
-                name: "roleTitle",
+                name: "title",
                 message: "What is the role title?",
             },
             {
                 type: "input",
-                name: "roleSalary",
+                name: "id",
+                message: "What is the role id?",
+            },
+            {
+                type: "input",
+                name: "salary",
                 message: "What is the role salary?",
             },
             {
                 type: "list",
-                name: "roleDepartment",
+                name: "departmentId",
                 message: "What is the role department?",
-                choices: rows,
+                choices: [
+                    "1 Programming",
+                    "2 Sales",
+                    "3 Creative",
+                    "4 Marketing",
+                    "5 Finance",
+                    "6 Legal"]
             },
 
         ])
-        console.log(`\n`);
-        console.log('\x1b[33m New Role Has Been Added. \x1b[0m');
-        console.log(`\n`);
-        console.table();
-        employeePrompt();
+
+            .then((res) => {
+                const sql = `INSERT INTO role SET ?`;
+                db.query(sql, {
+                    id: res.id,
+                    title: res.title,
+                    salary: res.salary,
+                    department_id: res.department_id,
+                })
+                console.log(`\n`);
+                console.log('\x1b[33m New Role Has Been Added. \x1b[0m');
+                console.log(`\n`);
+                console.table(res);
+                employeePrompt();
+            });
+
     })
 };
 
 const addEmployee = () => {
-    const sql = `SELECT * FROM department`;
+    const sql = `SELECT * FROM employee`;
 
-    db.query(sql, async (err, rows) => {
+    db.query(sql, async (err, res) => {
         if (err) throw err;
-        rows = rows.map(row => {
-            return {
-                key: row.id,
-                value: row.department_name,
-            }
-        });
+        res = res.map(({ id, first_name, last_name, role_id, manager_id }) => ({
+
+            value: id,
+            first_name: first_name,
+            last_name: last_name,
+            role: role_id,
+            manager: manager_id,
+
+        }));
         await inquirer.prompt([
             {
                 type: "input",
-                name: "employeeName",
-                message: "What is the employees name?",
-            },
-            {
-                type: "list",
-                name: "employeeDepartment",
-                message: "What is the employees department?",
-                choices: rows,
+                name: "first_name",
+                message: "What is the employees first name?",
             },
             {
                 type: "input",
-                name: "employeeRole",
+                name: "last_name",
+                message: "What is the employees last name?",
+            },
+            {
+                type: "input",
+                name: "role",
                 message: "What is the employees role?",
             },
             {
                 type: "input",
-                name: "employeeSalary",
-                message: "What is the employees salary?",
-            },
-            {
-                type: "input",
-                name: "employeeId",
+                name: "id",
                 message: "What is the employees id?",
             },
             {
                 type: "input",
-                name: "employeeManager",
-                message: "Who is the employees manager?",
+                name: "manager",
+                message: "Who is the employees manager id?",
             },
-
         ])
-        console.log(`\n`);
-        console.log('\x1b[33m New employee Has Been Added. \x1b[0m');
-        console.log(`\n`);
-        console.table();
-        employeePrompt();
+
+            .then((res) => {
+                const sql = `INSERT INTO employee SET ?`;
+                db.query(sql, {
+
+                    id: res.id,
+                    first_name: res.first_name,
+                    last_name: res.last_name,
+                    role: res.role_id,
+                    manager: res.manager_id,
+
+                })
+
+                console.log(`\n`);
+                console.log('\x1b[33m New Employee Has Been Added. \x1b[0m');
+                console.log(`\n`);
+                console.table(res);
+                employeePrompt();
+            });
+
     })
 };
-
-// const updateEmpRole = () => {
-//     const sql = ``;
-
-//     db.query(sql, (err, rows) => {
-//         if (err) throw err;
-//         console.log('Data received from DB:');
-//         console.table(rows);
-//         employeePrompt();
-//     })
-
-// };
