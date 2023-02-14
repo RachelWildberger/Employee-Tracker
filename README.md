@@ -9,7 +9,7 @@
   - [Questions](#questions)
 
   ## Description 
-  Built a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL. 
+  Built a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL.   
   
   Mysql schema contains 3 tables:
 
@@ -31,6 +31,7 @@
   * `manager_id: INT`
 
 
+
   ## Installation
   Installation of [Inquirer](https://www.npmjs.com/package/inquirer)
   *  Use ``npm install inquirer@8.2.4``
@@ -44,7 +45,7 @@
   Watch video of how to use the Employee Tracker: [here]().
 
 
-![Mock of Employee Tracker Database](./assets/team-profile-generator-example.png)
+![Mock of Employee Tracker Database](./assets/command-line-example.png)
 
   ## Testing 
   n/a
